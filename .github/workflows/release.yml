@@ -39,7 +39,7 @@ jobs:
 
     - name: Add pre-release tag to the version
       id: version
-      run: echo "::set-output name=version::$(semver bump prerelease alpha.. ${{ steps.latest_release.outputs.result }})"
+      run: semver bump prerel alpha.. ${{ steps.latest_release.outputs.result }}
       # This uses https://github.com/fsaintjacques/semver-tool to modify the version
       # by adding the "pre" label followed by the current time
 
