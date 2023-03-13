@@ -22,7 +22,9 @@ jobs:
 
     - name: Build
       run: |
-        go build -o aish main.go
+        GOOS=linux GOARCH=amd64 go build -o aish-linux main.go
+        GOOS=darwin GOARCH=amd64 go build -o aish-darwin-amd64 main.go
+        GOOS=darwin GOARCH=arm64 go build -o aish-darwin-arm64 main.go
 
 
     - name: Create Release
@@ -40,12 +42,32 @@ jobs:
         prerelease: false
 
 
-    - name: Upload Release Asset
+    - name: Upload Release Asset for Linux
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.OMNI_RELEASE_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./aish
-        asset_name: aish
+        asset_path: ./aish-linux
+        asset_name: aish-linux
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release Asset for Mac amd64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.OMNI_RELEASE_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./aish-amd64
+        asset_name: aish-amd64
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release Asset for Mac arm64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.OMNI_RELEASE_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./aish-arm64
+        asset_name: aish-arm64
         asset_content_type: application/octet-stream
