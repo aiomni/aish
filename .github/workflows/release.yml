@@ -11,7 +11,7 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
           fetch-depth: 0
 
@@ -19,6 +19,29 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: '1.19.2'
+
+    - name: Install semver-tool
+      run: |
+        wget https://github.com/fsaintjacques/semver-tool/archive/3.3.0.tar.gz
+        tar xf 3.3.0.tar.gz
+        cd semver-tool-3.3.0
+        make install
+
+    - name: Get the last prerelease version
+      id: latest_release
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.OMNI_RELEASE_TOKEN }}
+        script: |
+          const { data } = await github.rest.repos.getLatestRelease({ owner: context.repo.owner, repo: context.repo.repo });
+          console.log(data.tag_name);
+          return data.tag_name;
+
+    - name: Add pre-release tag to the version
+      id: version
+      run: echo "::set-output name=version::$(semver bump prerelease alpha.. ${{ steps.latest_release.outputs.result }})"
+      # This uses https://github.com/fsaintjacques/semver-tool to modify the version
+      # by adding the "pre" label followed by the current time
 
     - name: Build
       run: |
@@ -33,8 +56,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.OMNI_RELEASE_TOKEN }}
       with:
-        tag_name: v0.0.1-alpha.3
-        release_name: Release v0.0.1-alpha.3
+        tag_name: "${{steps.version.outputs.result}}"
+        release_name: Release "${{steps.version.outputs.result}}"
         body: |
           Changes in this release:
           - Added new feature
