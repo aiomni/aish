@@ -22,22 +22,6 @@ jobs:
       run: |
         go build -o aish main.go
 
-
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v0.0.1-alpha.1
-        release_name: Release v0.0.1-alpha.1
-        body: |
-          Changes in this release:
-          - Added new feature
-        draft: false
-        prerelease: false
-
-
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       env:
