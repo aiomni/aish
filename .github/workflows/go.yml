@@ -1,0 +1,49 @@
+name: Go Build and Release
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.19.2
+
+    - name: Build
+      run: |
+        go build -o aish main.go
+
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v0.0.1-alpha.1
+        release_name: Release v0.0.1-alpha.1
+        body: |
+          Changes in this release:
+          - Added new feature
+        draft: false
+        prerelease: false
+
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./aish
+        asset_name: aish
+        asset_content_type: application/octet-stream
