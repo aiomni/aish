@@ -14,9 +14,11 @@ TODO
 
 ## TODO
 
-- [ ] Check Config
+- [x] Check Config When ASK.
+- [x] View the config settings.
+- [x] Reset the config settings.
 - [ ] Support for both interactive commands and flags.
-- [ ] Custom Shell, eg:  `cat /etc/shells`
-- [ ] Proxy Service
-- [ ] View the config settings.
-- [ ] Reset the config settings.
+- [ ] Custom Shell, eg:  `cat /etc/shells`.
+- [ ] Proxy Service.
+- [ ] i18n support.
+- [ ] Find other command.

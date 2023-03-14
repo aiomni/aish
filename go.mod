@@ -4,7 +4,9 @@ go 1.19
 
 require (
 	github.com/atotto/clipboard v0.1.4
+	github.com/briandowns/spinner v1.23.0
 	github.com/fatih/color v1.14.1
+	github.com/liamg/tml v0.6.0
 	github.com/manifoldco/promptui v0.9.0
 	github.com/sashabaranov/go-openai v1.4.1
 	github.com/spf13/cobra v1.6.1
@@ -27,6 +29,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	golang.org/x/sys v0.3.0 // indirect
+	golang.org/x/term v0.1.0 // indirect
 	golang.org/x/text v0.5.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

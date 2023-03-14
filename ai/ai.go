@@ -16,8 +16,11 @@ func init() {
 	apiKey := config.GetAPIKey()
 	openAIconfig := openai.DefaultConfig(apiKey)
 	openAIconfig.OrgID = config.GetOrganizationID()
-	proxyDomain := config.GetProxyDomain()
-	openAIconfig.BaseURL = fmt.Sprintf("https://%s/v1", proxyDomain)
+	domain := config.GetProxyDomain()
+	if domain == "" {
+		domain = "api.openai.com"
+	}
+	openAIconfig.BaseURL = fmt.Sprintf("https://%s/v1", domain)
 	openAIconfig.HTTPClient.Timeout = 30 * time.Second
 
 	client = openai.NewClientWithConfig(openAIconfig)

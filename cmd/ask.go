@@ -8,10 +8,14 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/aiomni/aish/ai"
+	"github.com/aiomni/aish/config"
 	"github.com/atotto/clipboard"
+	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
+	"github.com/liamg/tml"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )
@@ -28,6 +32,17 @@ var askCmd = &cobra.Command{
 	Short: "Ask AI what you want to do",
 	Long:  `Ask AI what you want to do`,
 	Run: func(cmd *cobra.Command, args []string) {
+
+		if config.GetAPIKey() == "" {
+			tml.Printf("<red>Error: </red>OpenAI API Key NOT setting, use <green>`aish config set`</green> set API Key.\n")
+			os.Exit(1)
+		}
+
+		if config.GetOrganizationID() == "" {
+			tml.Printf("<red>Error: </red>OpenAI Organization ID NOT setting, use <green>`aish config set`</green> set Organization ID.\n")
+			os.Exit(1)
+		}
+
 		content := strings.Join(args, "")
 
 		if len(args) == 0 {
@@ -45,7 +60,11 @@ var askCmd = &cobra.Command{
 			content, _ = prompt.Run()
 		}
 
+		s := spinner.New(spinner.CharSets[38], 100*time.Millisecond)
+		s.Suffix = " Searching from chatGPT...\n"
+		s.Start()
 		res, err := ai.AskChatGPT(content)
+		s.Stop()
 
 		if err != nil {
 			color.Red(err.Error())
@@ -68,17 +87,8 @@ var askCmd = &cobra.Command{
 			color.Yellow(recommend.Warning)
 		}
 
-		// templates := &promptui.SelectTemplates{
-		// 	Label:    "{{ . }}?",
-		// 	Active:   "\U0001F336 {{ .Name | cyan }} ({{ .HeatUnit | red }})",
-		// 	Inactive: "  {{ .Name | cyan }} ({{ .HeatUnit | red }})",
-		// 	Selected: "\U0001F336 {{ .Name | red | cyan }}",
-		// }
-
-		options := []string{"Execute", "Copy", "Find Other", "Abort"}
-		// searcher := func(input string, index int) bool {
-		// 	return true
-		// }
+		// TODO: Find Other
+		options := []string{"Execute", "Copy", "Abort"}
 
 		prompt := promptui.Select{
 			Label: "Select What you want to do",
@@ -97,7 +107,6 @@ var askCmd = &cobra.Command{
 		switch opt {
 		case 0:
 			execute(recommend.Command)
-			return
 		case 1:
 			err := clipboard.WriteAll(recommend.Command)
 			if err != nil {
@@ -105,8 +114,7 @@ var askCmd = &cobra.Command{
 				os.Exit(1)
 			}
 			color.Green("复制成功！")
-			return
-		case 3:
+		case 2:
 			os.Exit(1)
 		}
 	},
