@@ -43,9 +43,9 @@ jobs:
 
     - name: Build
       run: |
-        GOOS=linux GOARCH=amd64 go build -ldflags "-X 'cmd.Version=v${{steps.version.outputs.version}}'" -o aish-linux main.go 
-        GOOS=darwin GOARCH=amd64 go build -ldflags "-X 'cmd.Version=v${{steps.version.outputs.version}}'" -o aish-darwin-amd64 main.go 
-        GOOS=darwin GOARCH=arm64 go build -ldflags "-X 'cmd.Version=v${{steps.version.outputs.version}}'" -o aish-darwin-arm64 main.go  
+        GOOS=linux GOARCH=amd64 go build -ldflags "-X 'github.com/aiomni/aish/cmd.Version=v${{steps.version.outputs.version}}'" -o aish-linux main.go 
+        GOOS=darwin GOARCH=amd64 go build -ldflags "-X 'github.com/aiomni/aish/cmd.Version=v${{steps.version.outputs.version}}'" -o aish-darwin-amd64 main.go 
+        GOOS=darwin GOARCH=arm64 go build -ldflags "-X 'github.com/aiomni/aish/cmd.Version=v${{steps.version.outputs.version}}'" -o aish-darwin-arm64 main.go  
 
 
     - name: Create Release
