@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bufio"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -122,20 +121,13 @@ var askCmd = &cobra.Command{
 
 func execute(command string) {
 	cmd := exec.Command("/bin/sh", "-c", command)
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	if err := cmd.Start(); err != nil {
 		fmt.Println(err)
 		return
 	}
-	scanner := bufio.NewScanner(stdout)
-	for scanner.Scan() {
-		fmt.Println(scanner.Text())
-	}
-
 	if err := cmd.Wait(); err != nil {
 		fmt.Println(err)
 		return

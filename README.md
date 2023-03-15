@@ -62,3 +62,5 @@ Then you can choose execute the command directly or copy it.
 * [ ] Proxy Service.
 * [ ] i18n support.
 * [ ] Find other command.
+* [ ] When execute command error, ask chatgpt how to resolve.
+* [ ] When the command is not installed, ask if it needs to be installed.
