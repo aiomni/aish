@@ -16,7 +16,7 @@ if [ -z "${BASH_VERSION}" ] || [ -n "${ZSH_VERSION}" ]; then
   exit 1
 fi
 
-function get_os() {
+get_os() {
   if [[ "$(uname)" == "Linux" ]]; then
     echo "linux"
   elif [[ "$(uname)" == "Darwin" ]] && [[ "$(uname -m)" == "x86_64" ]]; then
